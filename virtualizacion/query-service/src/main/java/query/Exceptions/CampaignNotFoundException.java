@@ -1,5 +1,8 @@
-package com.example.Exceptions;
+package query.Exceptions;
 
+/**
+ * Created by josec on 6/8/2016.
+ */
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
+import query.Exceptions.CampaignNotFoundException;
 import query.Exceptions.CategoryNotFoundException;
+import query.Exceptions.NoAdsException;
 import query.Exceptions.ZipCodeNotfound;
 
 import java.io.IOException;
@@ -42,6 +44,8 @@ public class QueryController {
     private static String TARGETING_SERVICE="TARGETING-SERVICE";
     private static String RANKING_SERVICE="RANKING-SERVICE";
     private static String ADS_SERVICE="ADS-SERVICE";
+    private static String EXCLUSION_SERVICE="EXCLUSION-SERVICE";
+
     @RequestMapping(value = "/query",method = RequestMethod.GET, produces = "application/json")
     public ArrayList<Ad> query (
             @RequestParam(value = "category", required = true) Integer category,
@@ -58,6 +62,7 @@ public class QueryController {
         String urlBudgetService = getUrl(BUDGET_SERVICE);
         String urlRankingService = getUrl(RANKING_SERVICE);
         String urlAdsService = getUrl(ADS_SERVICE);
+        String urlExclusionService = getUrl(EXCLUSION_SERVICE);
 
         ArrayList<Ad> listAds = new ArrayList();
         ArrayList<Integer> listCampaignsSubasta = new ArrayList<>();
@@ -74,16 +79,24 @@ public class QueryController {
         entity = new HttpEntity<>(Jackson.toJsonString(listCampaignsMatching), headers);
         ArrayList<Integer> listCampaignsBudget = restTemplate.postForObject(urlBudgetService+"/budget",entity,ArrayList.class);
 
+        entity = new HttpEntity<>(Jackson.toJsonString(listCampaignsMatching), headers);
+        ArrayList<Integer> listCampaignsExclusionFiltered = restTemplate.postForObject(urlExclusionService+"/exclusion?campaign="+campaign,entity,ArrayList.class);
+
         for(Integer i: listCampaignsMatching){
-            if(listCampaignsTargeting.contains(i)&&listCampaignsBudget.contains(i)){
+            if(listCampaignsTargeting.contains(i) && listCampaignsBudget.contains(i) && listCampaignsExclusionFiltered.contains(i)){
                 listCampaignsSubasta.add(i);
             }
         }
+
         entity = new HttpEntity<>(Jackson.toJsonString(listCampaignsSubasta), headers);
         listCampaignsSubasta = restTemplate.postForObject(urlRankingService+"/ranking?limit="+maximum,entity,ArrayList.class);
 
         entity = new HttpEntity<>(Jackson.toJsonString(listCampaignsSubasta), headers);
         listAds = restTemplate.postForObject(urlAdsService+"/ads",entity,ArrayList.class);
+
+        if (listAds == null || listAds.isEmpty())
+            throw  new NoAdsException();
+
         return listAds;
     }
 
@@ -113,6 +126,10 @@ public class QueryController {
                 if(json.getString("message").equalsIgnoreCase("Zip code not found"))
                 {
                     throw new ZipCodeNotfound();
+                }
+                if(json.getString("message").equalsIgnoreCase("Campaign not found"))
+                {
+                    throw new CampaignNotFoundException();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

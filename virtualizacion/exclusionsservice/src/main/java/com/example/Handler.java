@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class Handler extends BaseHandler {
     public ArrayList execute(Integer campaign, ArrayList<Integer> campaigns) throws CustomException {
         ArrayList<Integer> list = new ArrayList<Integer>();
+        ArrayList<Integer> exclusions = new ArrayList<Integer>();
         try
         {
             openConnection();
@@ -24,10 +25,16 @@ public class Handler extends BaseHandler {
                 throw new CampaignNotFoundException();
             }
 
-            ResultSet rs2 = executeQuery("SELECT ID_campaign FROM adsconfiguration.Targeting WHERE Zip_Code = " + zip_code + " ;");
+            ResultSet rs2 = executeQuery("SELECT ID_campaign FROM adsconfiguration.Campaign_Advertiser ad JOIN " +
+                    " adsconfiguration.Exclusion ex ON ex.ID_advertiser = ad.ID_advertiser WHERE ID_publisher = " + idPublisher + " ;");
+
             while (rs2.next()) {
-                if(campaigns.contains(rs2.getInt("ID_campaign")))
-                    list.add(rs2.getInt("ID_campaign"));
+                exclusions.add(rs2.getInt("ID_campaign"));
+            }
+
+            for(Integer i : campaigns){
+                if(!exclusions.contains(i))
+                    list.add(i);
             }
 
             closeConnection();
