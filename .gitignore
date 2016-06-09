@@ -1,0 +1,25 @@
+
+.nb-gradle
+.nb-gradle-properties
+.gradle
+.settings/
+.classpath
+.project
+build/
+data/
+# Ignore Gradle GUI config
+gradle-app.setting
+
+gradle/
+gradlew
+gradlew.bat
+
+!gradle-wrapper.jar
+
+/bin/
+
+.idea/
+
+*.ipr
+*.iws
+*.iml
