@@ -1,6 +1,7 @@
 package com.example;
 
 import com.amazonaws.util.json.Jackson;
+import com.eureka2.shading.codehaus.jackson.map.ObjectMapper;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class Handler extends BaseHandler {
 
     Random rand;
 
-    public ArrayList execute(ArrayList<Integer> campaigns, Integer publisherCampaign) throws CustomException {
+    public AdsDto execute(ArrayList<Integer> campaigns, Integer publisherCampaign) throws CustomException {
         ArrayList<Ad> listAds = new ArrayList<Ad>();
         rand = new Random();
         ArrayList<ImpressionDto> impressions = new ArrayList<ImpressionDto>();
@@ -89,7 +90,22 @@ public class Handler extends BaseHandler {
 
         ArrayList<ImpressionDto> responsePricingService = callPricingService(impressions);
         ArrayList<ImpressionDto> responseSessionService = callSessionService(responsePricingService);
-        return responseSessionService;
+
+        AdsDto dtoResponse = new AdsDto();
+        dtoResponse.header = new AdsDto.Header();
+        dtoResponse.header.query_id = java.util.UUID.randomUUID().toString();
+        dtoResponse.body =new ArrayList<>();
+        ObjectMapper mapper = new ObjectMapper();
+        for(Object object: responseSessionService){
+            ImpressionDto impressionDto = mapper.convertValue(object,ImpressionDto.class);
+            AdsDto.Body body = new AdsDto.Body();
+            body.impression_id = impressionDto.session;
+            body.click_url = impressionDto.clickUrl;
+            body.headline = impressionDto.headline;
+            body.description = impressionDto.description;
+            dtoResponse.body.add(body);
+        }
+        return dtoResponse;
     }
 
     private int getRandomNumber(int max){
@@ -120,6 +136,8 @@ public class Handler extends BaseHandler {
         impressionDto.urlAd= ad.url;
         impressionDto.idAd = ad.id;
         impressionDto.campaignId = ad.idCampaign;
+        impressionDto.headline = ad.headline;
+        impressionDto.description = ad.description;
         return impressionDto;
     }
 

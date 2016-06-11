@@ -24,4 +24,6 @@ public class ImpressionDto {
     public Integer idAd;
     public String urlAd;
     public String clickUrl;
+    public String headline;
+    public String description;
 }

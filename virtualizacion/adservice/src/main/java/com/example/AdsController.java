@@ -14,7 +14,7 @@ public class AdsController {
     Handler handler;
 
     @RequestMapping(value = "/ads",method = RequestMethod.POST, produces = "application/json", consumes="application/json")
-    public ArrayList getAds(
+    public AdsDto getAds(
             @RequestBody ArrayList<Integer> campaigns,
             @RequestParam Integer campaignPublisher
     ) throws BaseHandler.CustomException {

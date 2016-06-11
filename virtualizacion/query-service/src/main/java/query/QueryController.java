@@ -46,7 +46,7 @@ public class QueryController {
     private static String EXCLUSION_SERVICE="EXCLUSION-SERVICE";
 
     @RequestMapping(value = "/query",method = RequestMethod.GET, produces = "application/json")
-    public ArrayList<Ad> query (
+    public AdsDto query (
             @RequestParam(value = "category", required = true) Integer category,
             @RequestParam(value = "campaign", required = true) Integer campaign,
             @RequestParam(value = "maximum", required = false) Integer maximum,
@@ -87,12 +87,12 @@ public class QueryController {
         listCampaignsSubasta = restTemplate.postForObject(urlRankingService+"/ranking?limit="+maximum,entity,ArrayList.class);
 
         entity = new HttpEntity<>(Jackson.toJsonString(listCampaignsSubasta), headers);
-        listAds = restTemplate.postForObject(urlAdsService+"/ads?campaignPublisher="+campaign,entity,ArrayList.class);
+        AdsDto finalDto = restTemplate.postForObject(urlAdsService+"/ads?campaignPublisher="+campaign,entity,AdsDto.class);
 
-        if (listAds == null || listAds.isEmpty())
+        if (finalDto.body == null || finalDto.body.isEmpty())
             throw  new NoAdsException();
 
-        return listAds;
+        return finalDto;
     }
 
     public String getUrl(String serviceName) {
