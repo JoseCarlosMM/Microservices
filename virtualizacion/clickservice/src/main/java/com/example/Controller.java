@@ -21,6 +21,7 @@ public class Controller {
     private EurekaClient discoveryClient;
 
     private static String SESSION_SERVICE="SESSION-SERVICE";
+    private static String BUDGET_SERVICE="BUDGET-SERVICE";
 
     @RequestMapping(value = "/click",method = RequestMethod.GET, produces = "application/json")
     public Response getSession(
@@ -29,10 +30,14 @@ public class Controller {
 
         RestTemplate restTemplate = new RestTemplate();
         String urlSessionService = getUrl(SESSION_SERVICE);
+        String urlBudgetService = getUrl(BUDGET_SERVICE);
 
         ImpressionDto impression = restTemplate.getForObject(urlSessionService+"/impressions?id="+session,ImpressionDto.class);
         Response response = new Response();
         response.adUrl = impression.urlAd;
+
+        restTemplate.getForObject(urlBudgetService+"/budget?idCampaign="+impression.campaignId+"&Bid="+impression.bid,ImpressionDto.class);
+
         return response;
     }
 

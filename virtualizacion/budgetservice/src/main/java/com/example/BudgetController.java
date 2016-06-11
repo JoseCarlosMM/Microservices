@@ -2,6 +2,7 @@ package com.example;
 
 
 import org.springframework.web.bind.annotation.*;
+import redis.clients.jedis.Jedis;
 
 import java.util.ArrayList;
 
@@ -10,11 +11,12 @@ import java.util.ArrayList;
  */
 @RestController
 public class BudgetController {
-    @RequestMapping(value = "/budget",method = RequestMethod.POST, produces = "application/json", consumes="application/json")
-    public ArrayList targeting(
-            @RequestBody ArrayList<Integer> campaigns
+    @RequestMapping(value = "/budget",method = RequestMethod.GET, produces = "application/json")
+    public void targeting(
+            @RequestParam Integer idCampaign,
+            @RequestParam Double Bid
     ) throws BaseHandler.CustomException {
         Handler handler = new Handler();
-        return handler.execute(campaigns);
+        handler.execute(idCampaign,Bid);
     }
 }
