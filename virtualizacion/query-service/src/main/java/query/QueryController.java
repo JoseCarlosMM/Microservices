@@ -40,7 +40,6 @@ public class QueryController {
     private RestTemplate restTemplate;
 
     private static String MATCHING_SERVICE="MATCHING-SERVICE";
-    private static String BUDGET_SERVICE="BUDGET-SERVICE";
     private static String TARGETING_SERVICE="TARGETING-SERVICE";
     private static String RANKING_SERVICE="RANKING-SERVICE";
     private static String ADS_SERVICE="ADS-SERVICE";
@@ -59,7 +58,6 @@ public class QueryController {
 
         String urlMatchingService = getUrl(MATCHING_SERVICE);
         String urlTargetingService = getUrl(TARGETING_SERVICE);
-        String urlBudgetService = getUrl(BUDGET_SERVICE);
         String urlRankingService = getUrl(RANKING_SERVICE);
         String urlAdsService = getUrl(ADS_SERVICE);
         String urlExclusionService = getUrl(EXCLUSION_SERVICE);
@@ -77,13 +75,10 @@ public class QueryController {
         ArrayList<Integer> listCampaignsTargeting = restTemplate.postForObject(urlTargetingService+"/targeting?zip_code="+zip_code,entity,ArrayList.class);
 
         entity = new HttpEntity<>(Jackson.toJsonString(listCampaignsMatching), headers);
-        ArrayList<Integer> listCampaignsBudget = restTemplate.postForObject(urlBudgetService+"/budget",entity,ArrayList.class);
-
-        entity = new HttpEntity<>(Jackson.toJsonString(listCampaignsMatching), headers);
         ArrayList<Integer> listCampaignsExclusionFiltered = restTemplate.postForObject(urlExclusionService+"/exclusion?campaign="+campaign,entity,ArrayList.class);
 
         for(Integer i: listCampaignsMatching){
-            if(listCampaignsTargeting.contains(i) && listCampaignsBudget.contains(i) && listCampaignsExclusionFiltered.contains(i)){
+            if(listCampaignsTargeting.contains(i) && listCampaignsExclusionFiltered.contains(i)){
                 listCampaignsSubasta.add(i);
             }
         }
@@ -92,7 +87,7 @@ public class QueryController {
         listCampaignsSubasta = restTemplate.postForObject(urlRankingService+"/ranking?limit="+maximum,entity,ArrayList.class);
 
         entity = new HttpEntity<>(Jackson.toJsonString(listCampaignsSubasta), headers);
-        listAds = restTemplate.postForObject(urlAdsService+"/ads",entity,ArrayList.class);
+        listAds = restTemplate.postForObject(urlAdsService+"/ads?campaignPublisher="+campaign,entity,ArrayList.class);
 
         if (listAds == null || listAds.isEmpty())
             throw  new NoAdsException();

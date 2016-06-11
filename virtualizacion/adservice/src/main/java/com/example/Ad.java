@@ -7,4 +7,6 @@ public class Ad {
     public String headline;
     public String description;
     public String url;
+    public Integer id;
+    public Integer idCampaign;
 }

@@ -1,5 +1,6 @@
 package com.example;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -9,11 +10,14 @@ import java.util.ArrayList;
  */
 @RestController
 public class AdsController {
+    @Autowired
+    Handler handler;
+
     @RequestMapping(value = "/ads",method = RequestMethod.POST, produces = "application/json", consumes="application/json")
     public ArrayList getAds(
-            @RequestBody ArrayList<Integer> campaigns
+            @RequestBody ArrayList<Integer> campaigns,
+            @RequestParam Integer campaignPublisher
     ) throws BaseHandler.CustomException {
-        Handler handler = new Handler();
-        return handler.execute(campaigns);
+        return handler.execute(campaigns,campaignPublisher);
     }
 }

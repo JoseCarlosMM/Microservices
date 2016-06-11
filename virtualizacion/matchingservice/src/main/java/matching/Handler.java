@@ -23,7 +23,7 @@ public class Handler extends BaseHandler {
             }
 
             ResultSet rs = executeQuery("SELECT ID_campaign FROM adsconfiguration.Campaign_Advertiser WHERE Category = " + category +
-                    " AND Status = 1 ;");
+                    " AND Status = 1 AND Budget > 0;");
             while (rs.next()) {
                 list.add(rs.getInt("ID_campaign"));
             }
