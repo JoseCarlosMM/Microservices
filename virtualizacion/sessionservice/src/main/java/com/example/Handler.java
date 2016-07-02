@@ -25,16 +25,12 @@ public class Handler {
     public ArrayList<ImpressionDto> execute(ArrayList<ImpressionDto> impressions){
         for(ImpressionDto impression : impressions){
             impression.session= java.util.UUID.randomUUID().toString();
-            String urlClickService = getUrl(CLICK_SERVICE);
-            impression.clickUrl = urlClickService+"/click?session="+impression.session;
+            //impression.clickUrl = urlClickService+"/click?id="+impression.session;
+            impression.clickUrl = "http://clicklb-470241018.us-east-1.elb.amazonaws.com:80/click?id="+impression.session;
             elasticService.save(impression);
         }
         return impressions;
     }
 
 
-    public String getUrl(String serviceName) {
-        InstanceInfo instance = discoveryClient.getNextServerFromEureka(serviceName, false);
-        return instance.getHomePageUrl();
-    }
 }

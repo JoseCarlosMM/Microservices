@@ -4,6 +4,9 @@ eureka:
     serviceUrl:
       #defaultZone: http://172.31.52.145:8761/eureka/
       defaultZone: http://localhost:8761/eureka/
+redis:
+  #url: redisads.qkoiz3.0001.use1.cache.amazonaws.com
+  url: localhost.com
 
 spring:
   application:

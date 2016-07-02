@@ -2,9 +2,10 @@
 eureka:
   client:
     serviceUrl:
-      #defaultZone: http://172.31.52.145:8761/eureka/
-      defaultZone: http://localhost:8761/eureka/
-
+      defaultZone: http://172.31.52.145:8761/eureka/
+      #defaultZone: http://localhost:8761/eureka/
+  instance:
+      preferIpAddress: true
 spring:
   application:
     name: targeting-service

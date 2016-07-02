@@ -16,7 +16,7 @@ public class UpdateHandler extends BaseHandler {
         {
             Jedis jedis = new Jedis("localhost");
             openConnection();
-            ResultSet rs2 = executeQuery("SELECT ID_campaign, Budget FROM adsconfiguration.Campaign_Advertiser;");
+            ResultSet rs2 = executeQuery("SELECT ID_campaign, Budget FROM adsconfiguration.Campaign_Advertiser WHERE status = 1;");
             while (rs2.next()) {
 
                 Campaign campaign = new Campaign();
@@ -24,8 +24,22 @@ public class UpdateHandler extends BaseHandler {
                 campaign.id = rs2.getInt("ID_campaign");
                 campaign.budget = rs2.getDouble("Budget");
 
-                if(jedis.get(String.valueOf(campaign.id))==null)
+                if(jedis.get(String.valueOf(campaign.id))==null){
                     jedis.set(String.valueOf(campaign.id),String.valueOf(campaign.budget));
+                }
+            }
+            //Campaigns paused
+            ResultSet rs = executeQuery("SELECT ID_campaign, Budget FROM adsconfiguration.Campaign_Advertiser WHERE status = 0;");
+            while (rs.next()) {
+
+                Campaign campaign = new Campaign();
+
+                campaign.id = rs.getInt("ID_campaign");
+                campaign.budget = rs.getDouble("Budget");
+
+                if(jedis.get(String.valueOf(campaign.id))!=null){
+                    jedis.del(String.valueOf(campaign.id));
+                }
             }
             closeConnection();
         }

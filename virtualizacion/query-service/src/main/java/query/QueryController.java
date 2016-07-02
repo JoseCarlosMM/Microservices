@@ -57,7 +57,8 @@ public class QueryController {
             maximum=10;
 
         String urlMatchingService = getUrl(MATCHING_SERVICE);
-        String urlTargetingService = getUrl(TARGETING_SERVICE);
+        //String urlTargetingService = getUrl(TARGETING_SERVICE);
+        String urlTargetingService = "http://172.31.52.24:1520";
         String urlRankingService = getUrl(RANKING_SERVICE);
         String urlAdsService = getUrl(ADS_SERVICE);
         String urlExclusionService = getUrl(EXCLUSION_SERVICE);
@@ -89,7 +90,7 @@ public class QueryController {
         entity = new HttpEntity<>(Jackson.toJsonString(listCampaignsSubasta), headers);
         AdsDto finalDto = restTemplate.postForObject(urlAdsService+"/ads?campaignPublisher="+campaign,entity,AdsDto.class);
 
-        if (finalDto.body == null || finalDto.body.isEmpty())
+        if (finalDto== null || finalDto.body == null || finalDto.body.isEmpty())
             throw  new NoAdsException();
 
         return finalDto;

@@ -9,9 +9,10 @@ import java.sql.*;
  * Created by josec on 5/28/2016.
  */
 public class BaseHandler {
-    private static String DB_URL = "jdbc:mysql://adsconfiguration.cydtpwlenuws.us-east-1.rds.amazonaws.com:3306";
-    private static String USER = "pruebas";
-    private static String PASSWORD = "pruebas2016";
+    private static String DB_URL = "jdbc:mysql://52.90.64.203:9306?useUnicode=yes&characterEncoding=UTF-8";
+    //private static String DB_URL = "jdbc:mysql://172.31.63.59:9306?useUnicode=yes&characterEncoding=UTF-8";
+    private static String USER = "";
+    private static String PASSWORD = "";
     protected Connection connection;
 
     protected void openConnection(){

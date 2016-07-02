@@ -16,6 +16,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 public class ImpressionDto {
     public Integer campaignId;
     public Double bid;
+    public String query_id;
     public Double comission;
     @Id
     public  String session;

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class UpdateCron {
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 20000)
     public void reportCurrentTime() {
         UpdateHandler handler = new UpdateHandler();
         handler.execute();

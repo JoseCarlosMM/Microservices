@@ -9,5 +9,6 @@ spring:
   application:
     name: click-service
 
+
 server:
   port: 1538

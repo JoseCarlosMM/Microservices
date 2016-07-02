@@ -1,0 +1,14 @@
+# Discovery Server Access
+eureka:
+  client:
+    serviceUrl:
+      #defaultZone: http://172.31.52.145:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
+
+
+spring:
+  application:
+    name: targeting-service
+
+server:
+  port: 1598

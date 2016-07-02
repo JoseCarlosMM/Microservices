@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableDiscoveryClient
 @EnableScheduling
 public class BudgetserviceApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(BudgetserviceApplication.class, args);
 	}

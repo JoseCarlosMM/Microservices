@@ -8,11 +8,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class BudgetCron {
-    @Scheduled(fixedRate = 100000)
+    @Scheduled(fixedRate = 3600000)
     public void reportCurrentTime() {
         BudgetHandler handler = new BudgetHandler();
         handler.execute();
         System.out.println("hour passed");
-
     }
 }

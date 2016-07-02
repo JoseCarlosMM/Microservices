@@ -10,6 +10,7 @@ public class ImpressionDto {
     public  String session;
     public Integer publisherId;
     public Integer advertiserId;
+    public String query_id;
     public Integer idAd;
     public String urlAd;
     public String clickUrl;
